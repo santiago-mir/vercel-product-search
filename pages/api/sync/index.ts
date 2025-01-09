@@ -14,6 +14,7 @@ export default function (req: NextApiRequest, res: NextApiResponse) {
         const objects = records.map((r) => {
           return {
             id: r.id,
+            objectID: r.id,
             ...r.fields,
           };
         });
@@ -21,7 +22,6 @@ export default function (req: NextApiRequest, res: NextApiResponse) {
           indexName: "products",
           objects,
         });
-        console.log("siguiente pagina");
         fetchNextPage();
       },
       function done(err) {
