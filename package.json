@@ -1,0 +1,34 @@
+{
+  "name": "vercel-public-dir",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "airtable": "^0.12.2",
+    "algoliasearch": "5.19.0",
+    "dotenv": "^16.4.7",
+    "micro": "^10.0.1",
+    "micro-method-router": "^0.1.0",
+    "next": "^15.1.3",
+    "pg": "^8.13.1",
+    "pg-hstore": "^2.3.4",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "sequelize": "^6.37.5"
+  },
+  "devDependencies": {
+    "@types/node": "22.10.5",
+    "@types/react": "19.0.2",
+    "tsx": "^4.19.2",
+    "typescript": "5.7.2"
+  }
+}
