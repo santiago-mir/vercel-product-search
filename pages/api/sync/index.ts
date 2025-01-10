@@ -1,35 +1,42 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { getLimitAndOffset } from "lib/requests";
+import methods from "micro-method-router";
 import { airtableBase } from "lib/airtable";
 import { client } from "lib/algolia";
 
-export default function (req: NextApiRequest, res: NextApiResponse) {
-  const { offset, limit } = getLimitAndOffset(req, 100, 10000);
-  airtableBase("Furniture")
-    .select({
-      pageSize: 10,
-    })
-    .eachPage(
-      async function (records, fetchNextPage) {
-        const objects = records.map((r) => {
-          return {
-            id: r.id,
-            objectID: r.id,
-            ...r.fields,
-          };
-        });
-        await client.saveObjects({
-          indexName: "products",
-          objects,
-        });
-        fetchNextPage();
-      },
-      function done(err) {
-        if (err) {
-          console.error(err);
-          return;
+export default methods({
+  async get(req: NextApiRequest, res: NextApiResponse) {
+    // clear algolia index
+    await client.clearObjects({
+      indexName: "products",
+    });
+    // toma los records de airtable y los pasa a algolia
+    airtableBase("Furniture")
+      .select({
+        pageSize: 10,
+      })
+      .eachPage(
+        async function (records, fetchNextPage) {
+          const objects = records.map((r) => {
+            return {
+              objectID: r.id,
+              ...r.fields,
+            };
+          });
+          await client.saveObjects({
+            indexName: "products",
+            objects,
+          });
+          fetchNextPage();
+        },
+        function done(err) {
+          if (err) {
+            console.error(err);
+            return;
+          }
+          res.send(
+            "El index products de algolia fue sincronizado con el product catalog de Airtable"
+          );
         }
-        res.send("termino");
-      }
-    );
-}
+      );
+  },
+});
